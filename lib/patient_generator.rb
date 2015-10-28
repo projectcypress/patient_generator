@@ -3,12 +3,9 @@ class Generator
   require 'health-data-standards'
   require 'namey'
 
-  RELIGIOUS_AFFILIATION_NAME_MAP={'1'=>'Christian','2'=>'Jewish', '3'=>'Muslim', '4'=>'Jewish'}
-  ETHNICITY_NAME_MAP={'2186-5'=>'Not Hispanic or Latino', '2135-2'=>'Hispanic Or Latino'}
-  RACE_NAME_MAP={'1002-5' => 'American Indian or Alaska Native','2028-9' => 'Asian','2054-5' => 'Black or African American','2076-8' => 'Native Hawaiian or Other Pacific Islander','2106-3' => 'White','2131-1' => 'Other'}
   FEMALE_TITLES = ['Ms.', 'Mrs.', 'Miss', 'Dr.']
   MALE_TITLES = ['Mr.', 'Dr.']
-  LANGUAGES = ['English', 'Spanish', 'Arabic']
+
 
   def initialize(measure, populations=["IPP"])
     @measure = measure
@@ -217,27 +214,6 @@ class Generator
     patient.gender = gender
     patient.birthdate = @fields[:birthdate]
     patient.expired = false
-
-    # religious_affiliation_code = RELIGIOUS_AFFILIATION_NAME_MAP.keys()[rand(0..RELIGIOUS_AFFILIATION_NAME_MAP.size()-1)]
-    # religious_affiliation_value = RELIGIOUS_AFFILIATION_NAME_MAP[religious_affiliation_code]
-    # patient.religious_affiliation = {}
-    # patient.religious_affiliation[religious_affiliation_code] = religious_affiliation_value 
-
-    # ethnicity_code = ETHNICITY_NAME_MAP.keys()[rand(0..ETHNICITY_NAME_MAP.size()-1)]
-    # ethnicity_value = ETHNICITY_NAME_MAP[ethnicity_code]
-    # patient.ethnicity = {}
-    # patient.ethnicity[ethnicity_code] = ethnicity_value 
-
-    # race_code = RACE_NAME_MAP.keys()[rand(0..RACE_NAME_MAP.size()-1)]
-    # race_value = RACE_NAME_MAP[race_code]
-    # patient.race = {}
-    # patient.race[race_code] = race_value 
-
-    # patient.effective_time = Time.now
-    # patient.languages = []
-    # (1..rand[1..LANGUAGES.length]).each do |i|
-    #   patient.languages.push(LANGUAGES[rand[0..LANGUAGES.length-1]])
-    # end
 
     # data criteria has an oid on it for a value set 
     encounter = Encounter.new()
