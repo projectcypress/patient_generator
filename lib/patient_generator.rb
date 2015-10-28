@@ -1,8 +1,14 @@
 class Generator
 
   require 'health-data-standards'
-  # require 'active_support'
   require 'namey'
+
+  RELIGIOUS_AFFILIATION_NAME_MAP={'1'=>'Christian','2'=>'Jewish', '3'=>'Muslim', '4'=>'Jewish'}
+  ETHNICITY_NAME_MAP={'2186-5'=>'Not Hispanic or Latino', '2135-2'=>'Hispanic Or Latino'}
+  RACE_NAME_MAP={'1002-5' => 'American Indian or Alaska Native','2028-9' => 'Asian','2054-5' => 'Black or African American','2076-8' => 'Native Hawaiian or Other Pacific Islander','2106-3' => 'White','2131-1' => 'Other'}
+  FEMALE_TITLES = ['Ms.', 'Mrs.', 'Miss', 'Dr.']
+  MALE_TITLES = ['Mr.', 'Dr.']
+  LANGUAGES = ['English', 'Spanish', 'Arabic']
 
   def initialize(measure, populations=["IPP"])
     @measure = measure
@@ -11,7 +17,6 @@ class Generator
     @measurePeriod = 31540000
 
     # Handle criteria, populate list of criteria
-
     generate_criteria_path()
 
     generate_criteria_based_fields()
@@ -205,29 +210,42 @@ class Generator
     @name_generator = Namey::Generator.new
     gender = rand(0..100) < 50 ? "F" : "M"
     name = (gender == "F") ? @name_generator.female : @name_generator.male
-    female_titles = ["Ms.", "Mrs.", "Miss", "Dr."]
-    male_titles = ["Mr.", "Dr."]
-
-    patient = Record.new()
-    patient.title = (gender == "F") ? female_titles[rand(0..(female_titles.length-1))] : male_titles[rand(0..(male_titles.length-1))]
+    patient = Record.new(:created_at => Time.now)
+    patient.title = (gender == "F") ? FEMALE_TITLES[rand(0..(FEMALE_TITLES.length-1))] : MALE_TITLES[rand(0..(MALE_TITLES.length-1))]
     patient.first = name.split(' ')[0]
     patient.last = name.split(' ')[1]
     patient.gender = gender
     patient.birthdate = @fields[:birthdate]
-    
-    patient.deathdate = 00000000
-    patient.religious_affiliation = {}
-    patient.effective_time = 10000000
-    patient.race = {}
-    patient.ethnicity = {}
-    patient.languages = ["English", "Italian"]
-    patient.test_id = nil
-    patient.marital_status = {}
-    patient.medical_record_number = "N/A"
-    patient.medical_record_assigner = "N/A"
     patient.expired = false
 
-    puts patient.title
+    # religious_affiliation_code = RELIGIOUS_AFFILIATION_NAME_MAP.keys()[rand(0..RELIGIOUS_AFFILIATION_NAME_MAP.size()-1)]
+    # religious_affiliation_value = RELIGIOUS_AFFILIATION_NAME_MAP[religious_affiliation_code]
+    # patient.religious_affiliation = {}
+    # patient.religious_affiliation[religious_affiliation_code] = religious_affiliation_value 
+
+    # ethnicity_code = ETHNICITY_NAME_MAP.keys()[rand(0..ETHNICITY_NAME_MAP.size()-1)]
+    # ethnicity_value = ETHNICITY_NAME_MAP[ethnicity_code]
+    # patient.ethnicity = {}
+    # patient.ethnicity[ethnicity_code] = ethnicity_value 
+
+    # race_code = RACE_NAME_MAP.keys()[rand(0..RACE_NAME_MAP.size()-1)]
+    # race_value = RACE_NAME_MAP[race_code]
+    # patient.race = {}
+    # patient.race[race_code] = race_value 
+
+    # patient.effective_time = Time.now
+    # patient.languages = []
+    # (1..rand[1..LANGUAGES.length]).each do |i|
+    #   patient.languages.push(LANGUAGES[rand[0..LANGUAGES.length-1]])
+    # end
+
+    # data criteria has an oid on it for a value set 
+    encounter = Encounter.new()
+    encounter.description = @criteria_list[:single_criteria][0]['description']
+    encounter.time = 0
+    encounter.codes = {}
+
+    patient.encounters.push(encounter)
 
   end
 
