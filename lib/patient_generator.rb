@@ -7,7 +7,7 @@ class Generator
   MALE_TITLES = ['Mr.', 'Dr.']
 
 
-  def initialize(measure, populations=["IPP"])
+  def initialize(measure, populations=["IPP", "NUMER"])
     @measure = measure
     @populations = populations
     #one year, in seconds
@@ -16,10 +16,7 @@ class Generator
 
     # Handle criteria, populate list of criteria
     generate_criteria_path()
-    generate_criteria_based_fields()
 
-    # Using the populated criteria list, generate the patient
-    generate_patient() 
   end
 
   # For each population (in the case of CMS68v5, only IPP)
@@ -28,10 +25,11 @@ class Generator
     @criteria_list = {characteristics: [], single_criteria: []}
     @populations.each do |pop|
       population = get_population_criteria(pop)
-      # MONGO: population.preconditions.each do |pre|
       population['preconditions'].each do |pre|
         handle_precondition(pre)
       end
+      generate_criteria_based_fields()
+      generate_patient() 
     end
   end
 
@@ -129,8 +127,12 @@ class Generator
           @fields[:encounters] = []
         end
         @fields[:encounters].push(handle_encounter_criteria(crit))
+      elsif crit['definition'] == "procedure"
+        unless @fields[:procedures]
+          @fields[:procedures] = []
+        end
+        @fields[:procedures].push(handle_procedure_criteria(crit))
       else
-
       end
     end
   end
@@ -148,11 +150,8 @@ class Generator
     end
   end
 
-
-
   def handle_other_criteria(crit)
   end
-
 
   def handle_encounter_criteria(crit)
     encounter = Encounter.new()
@@ -164,6 +163,12 @@ class Generator
     encounter.codes['SNOMED-CT'] = crit['code_list_id']
     encounter
   end
+
+  def handle_procedure_criteria(crit)
+    procedure = Procedure.new()
+    procedure
+  end
+
   ############################################################################################
   # START: Utility functions
   #                          
@@ -193,8 +198,15 @@ class Generator
     patient.birthdate = @fields[:birthdate]
     patient.expired = false
     # data criteria has an oid on it for a value set 
-    @fields[:encounters].each do |encounter|
-      patient.encounters.push(encounter)
+    if @fields[:encounters]
+      @fields[:encounters].each do |encounter|
+        patient.encounters.push(encounter)
+      end
+    end
+    if @fields[:procedures]
+      @fields[:procedures].each do |procedure|
+        patient.procedures.push(procedure)
+      end
     end
   end
 
