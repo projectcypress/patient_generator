@@ -2,7 +2,6 @@ namespace :cypress do
   
   Mongoid.load!('../patient_generator/mongoid.yml', :development)
 
-  
   # For now, this will be geared toward CMS68
   desc 'Create a patient that can qualify for the IPP of given measure'
   task :patient_generation, [:measure] do |t, args|
