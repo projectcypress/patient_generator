@@ -11,17 +11,15 @@ gem 'rake'
 
 # gem 'health-data-standards', "3.5.3"
 
-#gem 'health-data-standards', path: "../health-data-standards"
-#gem 'health-data-standards',:git => 'https://github.com/projectcypress/health-data-standards.git', :branch => 'master'
-
+# gem 'health-data-standards', path: "../health-data-standards"
+gem 'health-data-standards',:git => 'https://github.com/projectcypress/health-data-standards.git', :branch => 'master'
+gem 'namey', :git => 'https://github.com/muffinista/namey.git', :branch => 'master'
 #gem 'quality-measure-engine', '~> 2.5.0'
 # gem 'health-data-standards',:git => 'https://github.com/ssayer/health-data-standards.git', :branch => 'validators'
 
-gem 'health-data-standards', :path => '../health-data-standards'
+# gem 'health-data-standards', :path => '../health-data-standards'
 
 # gem 'health-data-standards', '~> 3.5.2'
-
-
 
 #gem 'test-patient-generator', :git => 'https://github.com/pophealth/test-patient-generator.git', :branch => 'develop'
 #gem 'test-patient-generator', '~> 1.2.0'
