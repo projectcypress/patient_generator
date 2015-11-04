@@ -166,13 +166,20 @@ class Generator
 
   def handle_procedure_criteria(crit)
     procedure = Procedure.new()
+    crit['temporal_references'].each do |ref|
+      if ref['type'] == "DURING"
+        reference = get_data_criteria(ref['reference'])
+        criteria = @criteria_list[:single_criteria].select{|crit| crit['source_data_criteria'] == ref['reference']}[0]
+        type = criteria['type'].to_sym
+        time = @fields[type].select{|crit| crit['codes']['SNOMED-CT'] == criteria['code_list_id']}[0].time
+        procedure.time = time
+      end
+    end
     procedure
   end
 
   ############################################################################################
-  # START: Utility functions
-  #                          
-  #         
+  # START: Utility functions    
 
   def get_population_criteria(population)
     pop_hqmf_id = @measure.population_ids[population]
@@ -185,6 +192,9 @@ class Generator
   def get_data_criteria(id)
     @measure.hqmf_document["data_criteria"][id]
   end
+
+  # def handle_temporal_reference(reference)
+  # end
 
   def generate_patient
     @name_generator = Namey::Generator.new
@@ -208,6 +218,8 @@ class Generator
         patient.procedures.push(procedure)
       end
     end
+
+    puts patient
   end
 
 end
