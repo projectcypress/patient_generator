@@ -10,6 +10,7 @@ class Generator
   def initialize(measure, populations=["IPP", "NUMER"])
     @measure = measure
     @populations = populations
+
     #one year, in seconds
     @measurePeriod = 31540000
     @measurePeriodStartDate = Time.now - @measurePeriod*2
@@ -67,7 +68,7 @@ class Generator
     end
   end
 
-  def handle_or_critieria(precondition)
+  def handle_or_criteria(precondition)
     len = precondition["preconditions"].length 
     pre = precondition["preconditions"][rand(len)]
     handle_precondition(pre)
@@ -142,10 +143,17 @@ class Generator
     earliest_birthdate = (Time.now - roughly_100_years).to_i
     char['temporal_references'].each do |ref|
       if ref['type'] == "SBS"
-        reference = @measurePeriod
-        age = ref['range']['low']['value']
-        latest_birthdate = (Time.now - (age.to_i * 31540000)).to_i
-        return Time.at(rand(earliest_birthdate..latest_birthdate))
+        if ref['range']['low']
+          reference = @measurePeriod
+          age = ref['range']['low']['value']
+          latest_birthdate = (Time.now - (age.to_i * 31540000)).to_i
+          return Time.at(rand(earliest_birthdate..latest_birthdate))
+        elsif ref['range']['high']
+          reference = @measurePeriod
+          age = ref['range']['high']['value']
+          latest_birthdate = (Time.now - (age.to_i * 31540000)).to_i
+          return Time.at(rand(earliest_birthdate..latest_birthdate))
+        end
       end
     end
   end
@@ -179,7 +187,7 @@ class Generator
   end
 
   ############################################################################################
-  # START: Utility functions    
+  # START: Utility functions
 
   def get_population_criteria(population)
     pop_hqmf_id = @measure.population_ids[population]
@@ -193,8 +201,6 @@ class Generator
     @measure.hqmf_document["data_criteria"][id]
   end
 
-  # def handle_temporal_reference(reference)
-  # end
 
   def generate_patient
     @name_generator = Namey::Generator.new
@@ -218,8 +224,6 @@ class Generator
         patient.procedures.push(procedure)
       end
     end
-
-    puts patient
   end
 
 end

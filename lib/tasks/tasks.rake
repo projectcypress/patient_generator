@@ -13,9 +13,21 @@ namespace :cypress do
     if test_measure.count == 1
       measure = test_measure.first
       patient = Generator.new(measure)
+    elsif test_measure.count > 1
+      measure = test_measure.first
+      patient = Generator.new(measure, ["IPP"])
     else
       puts "Measure not found"
     end
+  end
+
+  desc 'Birthdate Test'
+  task :birthdate_test, [:lower_age, :upper_age, :period_start_date] do |t, args|
+    puts "################################"
+    puts "Finding birthdate: between #{args.lower_age} and #{args.upper_age} years old at time #{args.period_start_date}"
+    puts "################################"
+    birthdate = Birthdate.new(args.lower_age, args.upper_age, Time.now)
+    binding.pry
   end
 
 end

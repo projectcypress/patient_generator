@@ -5,6 +5,8 @@ require 'pry'
 require 'json'
 
 require_relative 'lib/patient_generator'
+require_relative 'lib/temporal_reference'
+require_relative 'lib/birthdate'
 
 # Pull in any rake task defined in lib/tasks
 Dir['lib/tasks/**/*.rake'].sort.each do |ext|
