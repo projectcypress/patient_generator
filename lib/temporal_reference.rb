@@ -1,8 +1,8 @@
 class TemporalReference
-  include Mongoid::Document
 
-  field :start_time, type: Integer
-  field :end_time, type: Integer
-
+  def initialize(temporal_object)
+    @type = temporal_object[:type]
+    @reference = temporal_object[:reference]    
+  end
 
 end

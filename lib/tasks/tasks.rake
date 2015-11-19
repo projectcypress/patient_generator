@@ -27,7 +27,29 @@ namespace :cypress do
     puts "Finding birthdate: between #{args.lower_age} and #{args.upper_age} years old at time #{args.period_start_date}"
     puts "################################"
     birthdate = Birthdate.new(args.lower_age, args.upper_age, Time.now)
-    binding.pry
   end
+
+  desc 'Rules Tests'
+  task :rules_tests, [:source_data_criteria, :type, :temporal_references] do |t, args|
+    rule = Rule.new(args)
+  end
+
+  desc 'Temporal References Tests'
+  task :temporal_references_tests, [:param] do |t, args|
+    
+  end
+
+  desc 'Birthdate Rules Tests'
+  task :birthdate_rules_tests, [:source_data_criteria, :type, :temporal_references] do |t, args|
+    birthdateRule = BirthdateRule.new(args, ['a', 'b'])
+    binding.pry
+
+  end
+
+  desc 'Execution Context Tests'
+  task :execution_context_tests, [:criteria_list, :measure] do |t, args|
+    executionContext = ExecutionContext.new(args.criteria_list)
+  end
+
 
 end
