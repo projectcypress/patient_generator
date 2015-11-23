@@ -10,8 +10,7 @@ class Generator
   def initialize(measure, populations=["IPP", "NUMER"])
     @measure = measure
     @populations = populations
-    criteria_list = DataCriteriaHelper.extract_data_criteria(@measure, @populations)
-    executionContext = ExecutionContext.new(criteria_list)
+    @executionContext = ExecutionContext.new(@measure, @populations)
   end
 
 
@@ -27,6 +26,10 @@ class Generator
     patient.birthdate = 123456
     patient.expired = false
 
+  end
+
+  def get_execution_context
+    return @executionContext
   end
 
 end

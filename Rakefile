@@ -7,13 +7,12 @@ require 'json'
 require_relative 'lib/patient_generator'
 require_relative 'lib/temporal_reference'
 require_relative 'lib/birthdate'
+require_relative 'lib/execution_context'
+
 require_relative 'lib/rule'
 require_relative 'lib/birthdate_rule'
 require_relative 'lib/procedure_rule'
 require_relative 'lib/encounter_rule'
-
-require_relative 'lib/execution_context'
-
 require_relative 'lib/helpers/data_criteria_helper'
 
 # Pull in any rake task defined in lib/tasks

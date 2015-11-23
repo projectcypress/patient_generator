@@ -2,6 +2,16 @@ namespace :cypress do
   
   Mongoid.load!('../patient_generator/mongoid.yml', :development)
 
+
+    puts "################################"
+    puts "Generating Test Data for CMS68v4"
+    puts "################################"
+    test_measure = HealthDataStandards::CQM::Measure.where({cms_id: 'CMS68v4'})
+    # Check to see that a valid measure was given and exists in the measure directory
+    @measure = test_measure.first
+    @generator = Generator.new(@measure)
+    @executionContext = @generator.get_execution_context()
+
   # For now, this will be geared toward CMS68
   desc 'Create a patient that can qualify for the IPP of given measure'
   task :patient_generation, [:measure] do |t, args|
@@ -35,15 +45,15 @@ namespace :cypress do
   end
 
   desc 'Temporal References Tests'
-  task :temporal_references_tests, [:param] do |t, args|
-    
+  task :temporal_references_tests, [:list_index] do |t, args|
+    index = args.list_index.to_i
+    sample_reference = @executionContext.get_criteria_list()[index]['temporal_references'][0]
+    temporal_reference = TemporalReference.new(sample_reference, @executionContext)
   end
 
   desc 'Birthdate Rules Tests'
   task :birthdate_rules_tests, [:source_data_criteria, :type, :temporal_references] do |t, args|
     birthdateRule = BirthdateRule.new(args, ['a', 'b'])
-    binding.pry
-
   end
 
   desc 'Execution Context Tests'

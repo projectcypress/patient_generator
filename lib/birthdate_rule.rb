@@ -1,7 +1,9 @@
 class BirthdateRule < Rule
    
   def execute(birthdate_value)
-    reference = @criteriaList[@sourceDataCriteria]
+    @temporal_reference = {:lower_bound => 0, :upperbound => 100}
+    # if temporal_reference.within_range(birthdate_value)
+    # end
   end
 
   def handle_birthdate_criteria(char)
